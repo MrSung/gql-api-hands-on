@@ -9,13 +9,13 @@ const typeDefs = gql`
   }
 
   type Actor {
-    id: ID
-    name: String
+    id: ID!
+    name: String!
   }
 
   type Movie {
-    id: ID
-    title: String
+    id: ID!
+    title: String!
     releaseDate: String
     rating: Int
     status: Status
@@ -39,6 +39,12 @@ const movies = [
     title: '36 Chamber',
     releaseDate: '10-10-1983',
     rating: 5,
+    actor: [
+      {
+        id: '1',
+        name: 'Gordon Liu',
+      },
+    ],
   },
 ];
 
