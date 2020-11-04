@@ -1,5 +1,4 @@
 const { ApolloServer, gql } = require('apollo-server');
-const { nanoid } = require('nanoid');
 
 const typeDefs = gql`
   enum Status {
@@ -27,18 +26,19 @@ const typeDefs = gql`
 
   type Query {
     movies: [Movie]
+    movie(id: ID): Movie
   }
 `;
 
 const movies = [
   {
-    id: `movie-${nanoid()}`,
+    id: `movie-1`,
     title: '5 deadly venoms',
     releaseDate: '10-10-1983',
     rating: 5,
   },
   {
-    id: `movie-${nanoid()}`,
+    id: `movie-2`,
     title: '36 Chamber',
     releaseDate: '10-10-1983',
     rating: 5,
@@ -54,6 +54,21 @@ const movies = [
 const resolvers = {
   Query: {
     movies: () => movies,
+    movie: (obj, { id }, ctx, info) => {
+      console.group('obj');
+      console.log(obj);
+      console.groupEnd();
+      console.group('id');
+      console.log(id);
+      console.groupEnd();
+      console.group('ctx');
+      console.log(ctx);
+      console.groupEnd();
+      console.group('info');
+      console.log(info);
+      console.groupEnd();
+      return movies.find((mv) => mv.id === id);
+    },
   },
 };
 
