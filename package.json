@@ -4,9 +4,13 @@
   "main": "index.js",
   "author": "Sungjoon Park",
   "license": "MIT",
+  "scripts": {
+    "server": "nodemon index.js"
+  },
   "dependencies": {
     "apollo-server": "^2.19.0",
-    "graphql": "^15.4.0"
+    "graphql": "^15.4.0",
+    "nodemon": "^2.0.6"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
