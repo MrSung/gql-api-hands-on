@@ -1,10 +1,27 @@
 const { ApolloServer, gql } = require('apollo-server');
 
 const typeDefs = gql`
+  enum Status {
+    WATCHED
+    INTERESTED
+    NOT_INTERESTED
+    UNKNOWN
+  }
+
+  type Actor {
+    id: ID
+    name: String
+  }
+
   type Movie {
+    id: ID
     title: String
     releaseDate: String
     rating: Int
+    status: Status
+    actor: [Actor]
+    # sample1: Float
+    # sample2: Boolean
   }
 
   type Query {
