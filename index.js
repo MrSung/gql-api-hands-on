@@ -1,4 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server');
+const { nanoid } = require('nanoid');
 
 const typeDefs = gql`
   enum Status {
@@ -31,11 +32,13 @@ const typeDefs = gql`
 
 const movies = [
   {
+    id: `movie-${nanoid()}`,
     title: '5 deadly venoms',
     releaseDate: '10-10-1983',
     rating: 5,
   },
   {
+    id: `movie-${nanoid()}`,
     title: '36 Chamber',
     releaseDate: '10-10-1983',
     rating: 5,
