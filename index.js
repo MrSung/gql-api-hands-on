@@ -34,12 +34,29 @@ const typeDefs = gql`
   }
 `;
 
+const actors = [
+  {
+    id: 'gordon',
+    name: 'Gordon Liu',
+  },
+  {
+    id: 'jackie',
+    name: 'Jackie Chan',
+  },
+];
+
 const movies = [
   {
     id: `movie-1`,
     title: '5 deadly venoms',
     releaseDate: new Date('3-9-1989'),
     rating: 5,
+    actor: [
+      {
+        id: '1',
+        name: 'Jackie Chen',
+      },
+    ],
   },
   {
     id: `movie-2`,
@@ -59,19 +76,26 @@ const resolvers = {
   Query: {
     movies: () => movies,
     movie: (obj, { id }, ctx, info) => {
-      console.group('obj');
+      console.group('Query movie arguments');
       console.log(obj);
-      console.groupEnd();
-      console.group('id');
       console.log(id);
-      console.groupEnd();
-      console.group('ctx');
       console.log(ctx);
-      console.groupEnd();
-      console.group('info');
       console.log(info);
       console.groupEnd();
       return movies.find((mv) => mv.id === id);
+    },
+  },
+  Movie: {
+    actor: ({ actor }, arg, ctx, info) => {
+      console.group('Movie actor arguments');
+      console.log(actor);
+      console.log(arg);
+      console.log(ctx);
+      console.log(info);
+      console.groupEnd();
+      const actorIds = actor.map(({ id }) => id);
+      const filteredActors = actors.filter(({ id }) => actorIds.includes(id));
+      return filteredActors;
     },
   },
   Date: new GraphQLScalarType({
