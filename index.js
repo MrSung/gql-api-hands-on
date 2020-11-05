@@ -1,6 +1,10 @@
 const { ApolloServer, gql } = require('apollo-server');
+const { GraphQLScalarType } = require('graphql');
+const { Kind } = require('graphql/language');
 
 const typeDefs = gql`
+  scalar Date
+
   enum Status {
     WATCHED
     INTERESTED
@@ -16,7 +20,7 @@ const typeDefs = gql`
   type Movie {
     id: ID!
     title: String!
-    releaseDate: String
+    releaseDate: Date
     rating: Int
     status: Status
     actor: [Actor]
@@ -34,13 +38,13 @@ const movies = [
   {
     id: `movie-1`,
     title: '5 deadly venoms',
-    releaseDate: '10-10-1983',
+    releaseDate: new Date('3-9-1989'),
     rating: 5,
   },
   {
     id: `movie-2`,
     title: '36 Chamber',
-    releaseDate: '10-10-1983',
+    releaseDate: new Date('10-10-1983'),
     rating: 5,
     actor: [
       {
@@ -70,6 +74,24 @@ const resolvers = {
       return movies.find((mv) => mv.id === id);
     },
   },
+  Date: new GraphQLScalarType({
+    name: 'Date',
+    description: "it's a date, deal with it.",
+    parseValue(value) {
+      // value from the client
+      return new Date(value);
+    },
+    serialize(value) {
+      // value sent to the client
+      return value.getTime();
+    },
+    parseLiteral(ast) {
+      if (ast.kind === Kind.INT) {
+        return new Date(ast.value);
+      }
+      return null;
+    },
+  }),
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
