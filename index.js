@@ -32,6 +32,10 @@ const typeDefs = gql`
     movies: [Movie]
     movie(id: ID): Movie
   }
+
+  type Mutation {
+    addMovie(title: String, releaseDate: Date, id: ID): [Movie]
+  }
 `;
 
 const actors = [
@@ -85,6 +89,7 @@ const resolvers = {
       return movies.find((mv) => mv.id === id);
     },
   },
+
   Movie: {
     actor: ({ actor }, arg, ctx, info) => {
       console.group('Movie actor arguments');
@@ -98,6 +103,32 @@ const resolvers = {
       return filteredActors;
     },
   },
+
+  Mutation: {
+    addMovie: (obj, { id, title, releaseDate }, ctx, info) => {
+      console.group('Mutation addMovie arguments');
+      console.log(obj);
+      console.log(id);
+      console.log(title);
+      console.log(releaseDate);
+      console.log(ctx);
+      console.log(info);
+      console.groupEnd();
+      // Do mutation end of database stuff
+      const newMoviesList = [
+        ...movies,
+        // new movie data
+        {
+          id,
+          title,
+          releaseDate,
+        },
+      ];
+      // Return data as expected in schema
+      return newMoviesList;
+    },
+  },
+
   Date: new GraphQLScalarType({
     name: 'Date',
     description: "it's a date, deal with it.",
