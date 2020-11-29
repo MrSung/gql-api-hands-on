@@ -2,6 +2,8 @@ const { ApolloServer, gql } = require('apollo-server');
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 
+const CONSOLE_FLAG = true;
+
 const typeDefs = gql`
   scalar Date
 
@@ -80,24 +82,28 @@ const resolvers = {
   Query: {
     movies: () => movies,
     movie: (obj, { id }, ctx, info) => {
-      console.group('Query movie arguments');
-      console.log(obj);
-      console.log(id);
-      console.log(ctx);
-      console.log(info);
-      console.groupEnd();
+      if (CONSOLE_FLAG) {
+        console.group('Query movie arguments');
+        console.log(obj);
+        console.log(id);
+        console.log(ctx);
+        console.log(info);
+        console.groupEnd();
+      }
       return movies.find((mv) => mv.id === id);
     },
   },
 
   Movie: {
     actor: ({ actor }, arg, ctx, info) => {
-      console.group('Movie actor arguments');
-      console.log(actor);
-      console.log(arg);
-      console.log(ctx);
-      console.log(info);
-      console.groupEnd();
+      if (CONSOLE_FLAG) {
+        console.group('Movie actor arguments');
+        console.log(actor);
+        console.log(arg);
+        console.log(ctx);
+        console.log(info);
+        console.groupEnd();
+      }
       const actorIds = actor.map(({ id }) => id);
       const filteredActors = actors.filter(({ id }) => actorIds.includes(id));
       return filteredActors;
@@ -106,14 +112,16 @@ const resolvers = {
 
   Mutation: {
     addMovie: (obj, { id, title, releaseDate }, ctx, info) => {
-      console.group('Mutation addMovie arguments');
-      console.log(obj);
-      console.log(id);
-      console.log(title);
-      console.log(releaseDate);
-      console.log(ctx);
-      console.log(info);
-      console.groupEnd();
+      if (CONSOLE_FLAG) {
+        console.group('Mutation addMovie arguments');
+        console.log(obj);
+        console.log(id);
+        console.log(title);
+        console.log(releaseDate);
+        console.log(ctx);
+        console.log(info);
+        console.groupEnd();
+      }
       // Do mutation end of database stuff
       const newMoviesList = [
         ...movies,
