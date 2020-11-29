@@ -124,26 +124,26 @@ const resolvers = {
   },
 
   Mutation: {
-    addMovie: (obj, { movie }, ctx, info) => {
+    addMovie: (obj, { movie }, { userId }) => {
       if (CONSOLE_FLAG) {
         console.group('Mutation addMovie arguments');
         console.log(obj);
-        console.log(movie);
-        // console.log(id);
-        // console.log(title);
-        // console.log(releaseDate);
-        console.log(ctx);
-        console.log(info);
+        // console.log(arg);
+        // console.log(ctx);
+        // console.log(info);
         console.groupEnd();
       }
-      // Do mutation end of database stuff
-      const newMoviesList = [
-        ...movies,
-        // new movie data
-        movie,
-      ];
-      // Return data as expected in schema
-      return newMoviesList;
+      // Return new data if userId is authenticated
+      if (userId) {
+        // Do mutation and of database stuff
+        const newMoviesList = [
+          ...movies,
+          // new movie data
+          movie,
+        ];
+        return newMoviesList;
+      }
+      return movies;
     },
   },
 
@@ -167,7 +167,24 @@ const resolvers = {
   }),
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  introspection: true,
+  playground: true,
+  context: ({ req }) => {
+    if (CONSOLE_FLAG) {
+      console.log('req', req);
+    }
+    // e.g. user authentication, db connections, ...
+    const fakeUser = {
+      userId: 'HelloImUser',
+    };
+    return {
+      ...fakeUser,
+    };
+  },
+});
 
 server.listen().then(({ url }) => {
   console.log(`Server started at ${url}`);
